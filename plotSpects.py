@@ -19,21 +19,26 @@ def read_file(filename):
 	print(name)
 	a1 = [float(x) for x in fo.readline()[:-2].split(',')]
 	p1 = [float(x) for x in fo.readline()[:-2].split(',')]
-	return name,a1, p1	
+	d1 = [e1 - e2 for (e1,e2) in zip(a1,p1)]
+	print(a1[0])
+	print(p1[0])
+	print(d1[0])
+	return name,a1,p1,d1	
 
 def plotFile(filename):
-
-
-	legend = []
-	name,a1,p1 = read_file(filename)
-	legend.append(str(name) + "_actual")
-	legend.append(str(name)+"_predicted")
-	plt.plot(range(400,800,2),a1)
-	plt.plot(range(400,800,2),p1)
-	plt.title('Comparing spectrums')
-	plt.ylabel("Cross Scattering Amplitude")
+	name,a1,p1,d1 = read_file(filename)
+	fig, (ax1, ax2) = plt.subplots(2,gridspec_kw={'height_ratios': [3, 1]})
+	fig.suptitle('Comparing spectrums')
+	legend1 = [str(name) + "_actual", str(name) + "_predicted"]
+	legend2 = ["actual - predicted"]
+	ax1.plot(range(400,802,2),a1)
+	ax1.plot(range(400,802,2),p1)
+	ax2.axhline(y=0,color='black',linewidth=1)
+	ax2.plot(range(400,802,2),d1)
+	plt.ylabel('Cross Scatting Amplitude')
 	plt.xlabel("Wavelength (nm)")
-	plt.legend(legend, loc='top left')
+	ax1.legend(legend1)
+	ax2.legend(legend2)
 	plt.show()
 
 if __name__=="__main__":

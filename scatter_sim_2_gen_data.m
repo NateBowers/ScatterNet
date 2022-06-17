@@ -3,28 +3,26 @@
 addpath 'spherical_T_matrix';
 addpath 'spherical_T_matrix/bessel';
 
-values = [];
-myspects = [];
-
 low_bound = 30;
 up_bound = 70;
 num_iteration = 1000;
-n = 0;
 
-num_layers = 3;
+num_layers = 5;
+
+values = zeros(num_iteration,num_layers);
+myspects = zeros(201,num_iteration);
 
 tic
-while n < num_iteration
-  n = n + 1;
-  r = [];
+for n = 1:num_iteration
+  r = zeros(1,num_layers);
   for i = 1:num_layers
     r1 = round(rand*(up_bound-low_bound)+low_bound,1);
-    r = [r r1];
+    r(i) = r1;
   end
   spect = scatter_sim_0_gen_single_spect(r);
-  myspects = [myspects spect(1:2:401,1)]; % Use 200 points in the spectrum.
-  values = [values ; r];
-  if rem(n, 100) ==0;
+  myspects(:,n) = spect(1:2:401,1);
+  values(n,:) = r;
+  if rem(n, 100) == 0
     disp('On: ')
     disp(n)
     disp(num_iteration)
@@ -32,5 +30,5 @@ while n < num_iteration
 end
 toc
 
-csvwrite(strcat('data/',num2str(num_layers),'_test_layer_tio2.csv'),myspects);
-csvwrite(strcat('data/',num2str(num_layers),'_test_layer_tio2_val.csv'),values);
+% csvwrite(strcat('data/',num2str(num_layers),'_layer_tio2.csv'),myspects);
+% csvwrite(strcat('data/',num2str(num_layers),'_layer_tio2_val.csv'),values);

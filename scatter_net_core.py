@@ -1,6 +1,6 @@
 '''
-    This program trains a feed-forward neural network. It takes in a geometric design (the radi of concentric spheres), and outputs the scattering spectrum. It is meant to be the first program run, to first train the weights
-    This file is the core file containing all necesary bits. 
+    This program trains a feed-forward neural network. It takes in a geometric design (the radii of concentric spheres), and outputs the scattering spectrum. It is meant to be the first program run, to first train the weights
+    This file is the core file containing all necessary bits. 
 '''
 
 import tensorflow as tf
@@ -13,16 +13,16 @@ import argparse
 #As per Xaiver init, this should be 2/n(input), though many different initializations can be tried. 
 def init_weights(shape,stddev=.1):
     """ Weight initialization """
-    weights = tf.random_normal(shape, stddev=stddev)
+    weights = tf.random.normal(shape, stddev=stddev)
     return tf.Variable(weights)
 
 def init_bias(shape, stddev=.1):
     """ Weight initialization """
-    biases = tf.random_normal([shape], stddev=stddev)
+    biases = tf.random.normal([shape], stddev=stddev)
     return tf.Variable(biases)
 
 def save_weights(weights,biases,output_folder,weight_name_save,num_layers):
-    for i in xrange(0, num_layers+1):
+    for i in range(0, num_layers+1):
         weight_i = weights[i].eval()
         np.savetxt(output_folder+weight_name_save+"/w_"+str(i)+".txt",weight_i,delimiter=',')
         bias_i = biases[i].eval()
@@ -32,7 +32,7 @@ def save_weights(weights,biases,output_folder,weight_name_save,num_layers):
 def load_weights(output_folder,weight_load_name,num_layers):
     weights = []
     biases = []
-    for i in xrange(0, num_layers+1):
+    for i in range(0, num_layers+1):
         weight_i = np.loadtxt(output_folder+weight_load_name+"/w_"+str(i)+".txt",delimiter=',')
         w_i = tf.Variable(weight_i,dtype=tf.float32)
         weights.append(w_i)
@@ -46,7 +46,7 @@ def forwardprop(X, weights, biases, num_layers, dropout=False, minLimit=None, ma
         X = tf.maximum(X, minLimit)
         X = tf.minimum(X, maxLimit)
     htemp = None
-    for i in xrange(0, num_layers):
+    for i in range(0, num_layers):
         if i ==0:
             htemp = tf.nn.relu(tf.add(tf.matmul(X, weights[i]), biases[i]))
         else:
